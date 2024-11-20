@@ -1,4 +1,4 @@
-- name: Configure and Install Nginx
+- name: Install and Configure Nginx
   hosts: all
   become: true
   pre_tasks:
