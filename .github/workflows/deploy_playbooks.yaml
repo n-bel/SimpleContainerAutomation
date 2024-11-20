@@ -1,6 +1,11 @@
 name: Deploy with Ansible
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'playbooks/**' # Only trigger for changes in the playbooks directory
   pull_request:
     branches:
       - main
