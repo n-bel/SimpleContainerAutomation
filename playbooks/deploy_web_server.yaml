@@ -1,6 +1,6 @@
 - name: Install and Configure Nginx
   hosts: webservers
-  become: yes
+  become: yes 
 
   tasks:
     - name: Install Required Packages
@@ -27,15 +27,16 @@
         - 22
         - 80
 
-    - name: Colone website repository
+    - name: Clone website repository
+      become_user: www-data
       git:
         repo: "https://github.com/scm-ninja/starter-web.git"
-        dest: "/var/www/html"
-        update: yes
+        dest: "/var/www/html/my_website"
+        force: yes
 
     - name: Set permissions
       file:
-        path: "/var/www/html"
+        path: "/var/www/html/my_website"
         owner: "www-data"
         group: "www-data"
         recurse: yes
@@ -47,16 +48,17 @@
           server {
             listen 80;
             server_name _;
-            root /var/www/html;
+            root /var/www/html/my_website;
             index index.html index.html;
 
             location / {
-              try_files $uri $uri/ -404;
+              try_files $uri $uri/ =404;
             }
           }
-        notify: Restart Nginx
+      notify:
+        - Restart Nginx
 
-  hamndlers:    
+  handlers:    
     - name: Restart Nginx
       service:
         name: nginx
